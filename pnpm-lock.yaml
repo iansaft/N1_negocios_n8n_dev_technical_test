@@ -1,0 +1,87 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    devDependencies:
+      dbmate:
+        specifier: ^2.32.0
+        version: 2.32.0
+
+packages:
+
+  '@dbmate/darwin-arm64@2.32.0':
+    resolution: {integrity: sha512-1qIf1xXnf/u/heEmQYdHrhyiefsKGIR38QWedQri41OAbgLqk7oyZWQDXncJ8sqfPVZxE9+SuOZEcujXb+i7Eg==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@dbmate/darwin-x64@2.32.0':
+    resolution: {integrity: sha512-Nuv0UDE8qOro1rzUWhzLXzpnJ6h/Y0MNlzlGSUpCfvN8KVWulnxL/pJipKoDXh+IW7UZGsQw5GHoR6ZRraZcuw==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@dbmate/linux-arm64@2.32.0':
+    resolution: {integrity: sha512-TnmUEwXMyo3nvyBWfdjhCCHs+7YdKXgE+gck/pa29Dk1SlKbVyguz3DDB0Fi1+YEZ2LTVekee18/Lp6UnUN8JQ==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@dbmate/linux-arm@2.32.0':
+    resolution: {integrity: sha512-j4UqqXZeK54hU24cXlhlZg+RUpMkAA4zsFoLmFMKWVNlGz7MzSwnFzB/blZR2q7+4E+o/DoPp+rt11no/jS+Rg==}
+    cpu: [arm]
+    os: [linux]
+
+  '@dbmate/linux-ia32@2.32.0':
+    resolution: {integrity: sha512-fOTCnIbejqDHCu6J4DuBSakYexEszqQfmVwlabScG+nhbrKMOCV4ugkbkBhdjIRaH+ulIiFFSDwRQ6xmJ91dDQ==}
+    cpu: [ia32]
+    os: [linux]
+
+  '@dbmate/linux-x64@2.32.0':
+    resolution: {integrity: sha512-PPmRSfAcy20jku/p0bhnmKZi/R8cFRPIWeDVOhuZPFM9s06FM+EtwhtO21ZORqYN3hvExhZ6y3dbY8fkNf616Q==}
+    cpu: [x64]
+    os: [linux]
+
+  '@dbmate/win32-x64@2.32.0':
+    resolution: {integrity: sha512-rG0oMjOrPagGq9S/LY79hdEx3fNGiysFo5qrZmMELr3Cb/uxswY8elK3vKKiGsIFMX7NUby49RpxD1pCjE+zRQ==}
+    cpu: [x64]
+    os: [win32]
+
+  dbmate@2.32.0:
+    resolution: {integrity: sha512-UxIXGs8aRKMEhotn9mzOOI+Cswfazy/zE52xQNsLz+OM5nn5C+H/Av/SnHyUsRG/nhelbgv9mXBS76ish1AyNw==}
+    hasBin: true
+
+snapshots:
+
+  '@dbmate/darwin-arm64@2.32.0':
+    optional: true
+
+  '@dbmate/darwin-x64@2.32.0':
+    optional: true
+
+  '@dbmate/linux-arm64@2.32.0':
+    optional: true
+
+  '@dbmate/linux-arm@2.32.0':
+    optional: true
+
+  '@dbmate/linux-ia32@2.32.0':
+    optional: true
+
+  '@dbmate/linux-x64@2.32.0':
+    optional: true
+
+  '@dbmate/win32-x64@2.32.0':
+    optional: true
+
+  dbmate@2.32.0:
+    optionalDependencies:
+      '@dbmate/darwin-arm64': 2.32.0
+      '@dbmate/darwin-x64': 2.32.0
+      '@dbmate/linux-arm': 2.32.0
+      '@dbmate/linux-arm64': 2.32.0
+      '@dbmate/linux-ia32': 2.32.0
+      '@dbmate/linux-x64': 2.32.0
+      '@dbmate/win32-x64': 2.32.0

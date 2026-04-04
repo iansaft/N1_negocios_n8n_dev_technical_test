@@ -1,0 +1,21 @@
+{
+  "name": "N1_negocios_n8n_dev_technical_test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "db:new": "sh -c 'pnpm dbmate new \"$0\"'",
+    "db:up": "pnpm dbmate up",
+    "db:down": "pnpm dbmate rollback",
+    "db:status": "pnpm dbmate status",
+    "db:ping": "pnpm dbmate wait",
+    "cache:ping": "export $(grep -v '^#' .env | xargs) && sudo docker exec -e REDISCLI_AUTH=\"$REDIS_PASSWORD\" -it \"$REDIS_CONTAINER_NAME\" redis-cli ping"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.33.0",
+  "devDependencies": {
+    "dbmate": "^2.32.0"
+  }
+}
