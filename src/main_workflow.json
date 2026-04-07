@@ -10,8 +10,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -704,
-        -144
+        -1664,
+        -224
       ],
       "id": "1e54b327-342f-4b86-aab7-df93aca88396",
       "name": "webhook_trig",
@@ -27,7 +27,7 @@
       "typeVersion": 1.5,
       "position": [
         1376,
-        -352
+        -416
       ],
       "id": "1f2137e4-34dc-48e6-9f2b-ddff8cc14168",
       "name": "success_response"
@@ -52,7 +52,10 @@
             "email": "={{ $('validate_input').item.json.data.email }}",
             "cpf": "={{ $('validate_input').item.json.data.cpf }}",
             "cep": "={{ $('validate_input').item.json.data.cep }}",
-            "status": "LEAD_VALID"
+            "status": "={{ $json.status }}",
+            "city": "={{ $json.city }}",
+            "state": "={{ $json.state }}",
+            "street": "={{ $json.street }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -177,7 +180,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        576,
+        528,
         -240
       ],
       "id": "33a4324c-fd1f-46f6-8bbf-5a8ee2c801bf",
@@ -198,7 +201,7 @@
       "typeVersion": 2,
       "position": [
         1184,
-        -352
+        -416
       ],
       "id": "551c7a1d-6e4a-4770-9e85-0b7dde8c67aa",
       "name": "format_response"
@@ -210,8 +213,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -480,
-        -144
+        -1440,
+        -224
       ],
       "id": "39c117a5-5d8a-482b-8d7c-57031ab73af4",
       "name": "validate_input"
@@ -219,16 +222,16 @@
     {
       "parameters": {
         "operation": "set",
-        "key": "=lock:cpf:{{ $('validate_input').item.json.data.cpf }}",
+        "key": "=cpf:{{ $('validate_input').item.json.data.cpf }}",
         "keyType": "string",
         "expire": true,
-        "ttl": 15
+        "ttl": 20
       },
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        1184,
-        -160
+        1136,
+        -32
       ],
       "id": "510a4bb1-5ef7-463b-8f9a-6a0ced2c29f0",
       "name": "cache_lead_cpf",
@@ -244,16 +247,16 @@
     {
       "parameters": {
         "operation": "set",
-        "key": "=lock:email:{{ $('validate_input').item.json.data.email }}",
+        "key": "=email:{{ $('validate_input').item.json.data.email }}",
         "keyType": "string",
         "expire": true,
-        "ttl": 15
+        "ttl": 20
       },
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        1184,
-        32
+        1136,
+        160
       ],
       "id": "bf39df0a-9635-48ba-9b6f-1865f7c0cd8a",
       "name": "cache_lead_email",
@@ -269,16 +272,16 @@
     {
       "parameters": {
         "operation": "set",
-        "key": "=lock:cpf:{{ $('validate_input').item.json.data.cpf }}",
+        "key": "=cpf:{{ $('validate_input').item.json.data.cpf }}",
         "keyType": "string",
         "expire": true,
-        "ttl": 15
+        "ttl": 20
       },
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
         784,
-        -352
+        -416
       ],
       "id": "d0d9059a-93f1-45f8-9175-70f57fb4b3ab",
       "name": "cache_lead_cpf_after_persist",
@@ -294,16 +297,16 @@
     {
       "parameters": {
         "operation": "set",
-        "key": "=lock:email:{{ $('validate_input').item.json.data.email }}",
+        "key": "=email:{{ $('validate_input').item.json.data.email }}",
         "keyType": "string",
         "expire": true,
-        "ttl": 15
+        "ttl": 20
       },
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
         992,
-        -352
+        -416
       ],
       "id": "76aa5cbf-ef43-49e4-a05e-e4da37b65e5f",
       "name": "cache_lead_email_after_persist",
@@ -318,80 +321,13 @@
     },
     {
       "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.success }}",
-                    "rightValue": false,
-                    "operator": {
-                      "type": "boolean",
-                      "operation": "true",
-                      "singleValue": true
-                    },
-                    "id": "8d310e1e-26a2-4eff-8f4f-ce05b5dc361e"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "is_valid"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 3
-                },
-                "conditions": [
-                  {
-                    "id": "073e37b7-fa56-4105-9ac8-74996f0be24a",
-                    "leftValue": "={{ $json.success }}",
-                    "rightValue": "",
-                    "operator": {
-                      "type": "boolean",
-                      "operation": "false",
-                      "singleValue": true
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "is_invalid"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.4,
-      "position": [
-        -272,
-        -144
-      ],
-      "id": "8ab0177c-b493-49b5-b69a-98aebb0665a1",
-      "name": "check_input"
-    },
-    {
-      "parameters": {
         "options": {}
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        -48,
-        -48
+        -1024,
+        -96
       ],
       "id": "447e6d6d-c096-4be4-8a98-d95753831d37",
       "name": "send_invalid_response"
@@ -483,8 +419,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        784,
-        -144
+        752,
+        -16
       ],
       "id": "bcbe8f53-689c-4514-b96a-1d599fdffbe9",
       "name": "check_persist_lead_error"
@@ -498,8 +434,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1376,
-        -160
+        1328,
+        -32
       ],
       "id": "5afa709b-6bb6-4e4e-a933-c7ce4f155aab",
       "name": "send_cpf_duplicated_response"
@@ -513,8 +449,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1376,
-        32
+        1328,
+        160
       ],
       "id": "19bb4caf-7ebd-45ea-9358-de39ada3d671",
       "name": "send_email_duplicated_response"
@@ -523,15 +459,15 @@
       "parameters": {
         "operation": "get",
         "propertyName": "email",
-        "key": "=lock:email:{{ $('validate_input').item.json.data.email }}",
+        "key": "=email:{{ $('validate_input').item.json.data.email }}",
         "keyType": "string",
         "options": {}
       },
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        128,
-        -224
+        -576,
+        -240
       ],
       "id": "343df835-fcc1-4109-ad93-4dc7e0af1975",
       "name": "check_lead_email",
@@ -552,15 +488,15 @@
       "parameters": {
         "operation": "get",
         "propertyName": "cpf",
-        "key": "=lock:cpf:{{ $('validate_input').item.json.data.cpf }}",
+        "key": "=cpf:{{ $('validate_input').item.json.data.cpf }}",
         "keyType": "string",
         "options": {}
       },
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
       "position": [
-        -48,
-        -224
+        -752,
+        -240
       ],
       "id": "d07ff032-06bd-489c-95f1-5177411ac347",
       "name": "check_lead_cpf",
@@ -576,6 +512,314 @@
         }
       },
       "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $('check_lead_cpf').item.json.cpf !== null\n? {\n    success: false,\n    status: \"DUPLICATED\",\n    errorCode: \"LEAD_CPF_DUPLICATED\",\n    errors: { \"cpf\": \"A lead with this CPF already exists.\" }\n  }\n: {\n    success: false,\n    status: \"DUPLICATED\",\n    errorCode: \"LEAD_EMAIL_DUPLICATED\",\n    errors: { \"email\": \"A lead with this email already exists.\" }\n  }\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -176,
+        -128
+      ],
+      "id": "6fa64355-7ba6-43ec-bad0-f6cdfb95be0d",
+      "name": "send_lead_duplicated_response"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "error_logs",
+        "messageData": "={{ $json.error_log.toJsonString() }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        368
+      ],
+      "id": "0de963a3-cd24-4ab3-a7ff-4e375155d150",
+      "name": "log_postgres_error",
+      "credentials": {
+        "redis": {
+          "id": "3UvSovRAwaiQe2rV",
+          "name": "app_cache"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n    \"success\": false,\n    \"status\": \"INTERNAL_ERROR\",\n    \"errorCode\": \"INTERNAL_SERVER_ERROR\",\n    \"errors\": {\n        \"email\": \"An unexpected error occurred while saving the lead. Please try again later.\"\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1328,
+        368
+      ],
+      "id": "81065323-bdda-433b-a44f-1006359d0a43",
+      "name": "send_postgres_error_response"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  error_log: {\n    \"service\": \"faker_api\",\n    \"input\": {{ $('validate_input').item.json.data.toJsonString() }},\n    \"output\": {{ $json.toJsonString() }},\n    \"timestamp\": {{ $now.toUTC() }}\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        944,
+        368
+      ],
+      "id": "5fb35e36-a020-4976-ab17-c920a66aa0f0",
+      "name": "format_postgres_error"
+    },
+    {
+      "parameters": {
+        "url": "=https://viacep.com.br/ws/{{ $('validate_input').item.json.data.cep }}/json/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        112,
+        -336
+      ],
+      "id": "5cb1dcc4-a245-4eb2-917d-18421b246f8f",
+      "name": "get_from_via_cep",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "74833256-0429-430d-87e1-1dcbd5c67def",
+              "name": "street",
+              "value": "={{ !$json.error && $json.logradouro }}",
+              "type": "string"
+            },
+            {
+              "id": "8ef2b2bf-022f-4a34-9ab8-d136fcff3246",
+              "name": "city",
+              "value": "={{ !$json.error && $json.localidade }}",
+              "type": "string"
+            },
+            {
+              "id": "c40ecf0f-6016-4389-8d97-3df561a8ba0a",
+              "name": "state",
+              "value": "={{ !$json.error && $json.uf }}",
+              "type": "string"
+            },
+            {
+              "id": "6e01d668-a8a6-4bf3-91aa-d63ee93dd12a",
+              "name": "status",
+              "value": "={{ !$json.error ? \"LEAD_VALID\" : \"LEAD_ERROR\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        -352
+      ],
+      "id": "935d4bf0-af99-429c-9fca-fabc50147cdb",
+      "name": "format_via_cep_data"
+    },
+    {
+      "parameters": {
+        "url": "=https://brasilapi.com.br/api/cep/v1/{{ $('validate_input').item.json.data.cep }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        112,
+        -96
+      ],
+      "id": "2fe3aa20-f504-409c-b20a-02c3d710b39b",
+      "name": "get_from_brasilapi",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "74833256-0429-430d-87e1-1dcbd5c67def",
+              "name": "street",
+              "value": "={{ $json.street }}",
+              "type": "string"
+            },
+            {
+              "id": "8ef2b2bf-022f-4a34-9ab8-d136fcff3246",
+              "name": "city",
+              "value": "={{ $json.city }}",
+              "type": "string"
+            },
+            {
+              "id": "c40ecf0f-6016-4389-8d97-3df561a8ba0a",
+              "name": "state",
+              "value": "={{ $json.state }}",
+              "type": "string"
+            },
+            {
+              "id": "6e01d668-a8a6-4bf3-91aa-d63ee93dd12a",
+              "name": "status",
+              "value": "={{ !$json.error ? \"LEAD_VALID\" : \"LEAD_ERROR\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        -96
+      ],
+      "id": "d7ea63de-a29f-4c9e-817a-e9e36ace7e5a",
+      "name": "format_brasilapi_data"
+    },
+    {
+      "parameters": {
+        "content": "## Recebimento e validação dos dados do lead\nResponsável por receber os dados via webhook, validar as informações de entrada e, em caso de falha na validação, retornar ao webhook o status INVALID_LEAD_DATA.",
+        "height": 464,
+        "width": 912,
+        "color": "#1E3A5F"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1728,
+        -400
+      ],
+      "id": "d87ae5f4-54da-401c-b70c-12a96a14ab36",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Verificação de duplicidade no cache\nResponsável por consultar o Redis para verificar se CPF ou e-mail já estão cadastrados. Caso alguma duplicidade seja identificada, retorna ao webhook o status DUPLICATED.",
+        "height": 464,
+        "width": 816,
+        "color": "#2D3748"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        -400
+      ],
+      "id": "c8efd77b-81ae-4eae-a240-75b64147f220",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Consulta e tratamento de dados de endereço\nResponsável por consultar APIs externas com base no CEP informado no lead. Se a primeira API falhar, realiza uma nova tentativa em outra API. Caso ambas falhem, segue o fluxo com o status LEAD_ERROR. Quando houver sucesso, formata os dados de endereço para seguir com o cadastro no PostgreSQL.",
+        "height": 720,
+        "width": 432,
+        "color": "#1E3A5F"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        32,
+        -656
+      ],
+      "id": "2d216ef1-6f3b-4541-890a-13d42896b847",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Persistência do lead no PostgreSQL\nResponsável apenas por inserir os dados do lead no banco de dados PostgreSQL.",
+        "height": 608,
+        "width": 192,
+        "color": "#785A1E"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -544
+      ],
+      "id": "23441172-aa3e-4c36-89e5-7bad36d77b48",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Tratamento de erros na persistência do lead\nResponsável por tratar erros de cadastro no PostgreSQL, incluindo CPF duplicado, e-mail duplicado e outros erros. Nos casos de duplicidade, registra o dado no cache com TTL para futura validação de duplicidade. Em erros desconhecidos, grava o ocorrido em uma lista no Redis chamada error_logs e retorna ao webhook o status INTERNAL_ERROR.",
+        "height": 752,
+        "width": 896,
+        "color": "#641E1E"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        688,
+        -192
+      ],
+      "id": "ca63a525-821d-426a-b3ea-519cca801fd7",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Sucesso no cadastro do lead\nResponsável por tratar o retorno de sucesso da persistência no PostgreSQL, registrar CPF e e-mail no cache com TTL para futura validação de duplicidade e formatar a resposta final de sucesso do webhook com todos os dados do lead.",
+        "height": 336,
+        "width": 896,
+        "color": "#166534"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        688,
+        -544
+      ],
+      "id": "5a0f1f7a-4120-4eff-a8b4-e6f4f3e7387e",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e02a5d2e-5edc-46e6-b746-cfb596940107",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1232,
+        -224
+      ],
+      "id": "9979b339-4176-4d23-bbae-b872a04db4f0",
+      "name": "check_validation_success"
     },
     {
       "parameters": {
@@ -605,77 +849,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        304,
-        -224
+        -400,
+        -240
       ],
       "id": "15f66479-4ea9-4cf0-9172-c1843da2dcde",
-      "name": "check_duplication"
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ $('check_lead_cpf').item.json.cpf !== null\n? {\n    success: false,\n    status: \"DUPLICATED\",\n    errorCode: \"LEAD_CPF_DUPLICATED\",\n    errors: { \"cpf\": \"A lead with this CPF already exists.\" }\n  }\n: {\n    success: false,\n    status: \"DUPLICATED\",\n    errorCode: \"LEAD_EMAIL_DUPLICATED\",\n    errors: { \"email\": \"A lead with this email already exists.\" }\n  }\n}}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        576,
-        32
-      ],
-      "id": "6fa64355-7ba6-43ec-bad0-f6cdfb95be0d",
-      "name": "send_lead_duplicated_response"
-    },
-    {
-      "parameters": {
-        "operation": "push",
-        "list": "error_logs",
-        "messageData": "={{ $json.error_log.toJsonString() }}"
-      },
-      "type": "n8n-nodes-base.redis",
-      "typeVersion": 1,
-      "position": [
-        1376,
-        240
-      ],
-      "id": "0de963a3-cd24-4ab3-a7ff-4e375155d150",
-      "name": "log_postgres_error",
-      "credentials": {
-        "redis": {
-          "id": "3UvSovRAwaiQe2rV",
-          "name": "app_cache"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "{\n    \"success\": false,\n    \"status\": \"LEAD_ERROR\",\n    \"errorCode\": \"INTERNAL_SERVER_ERROR\",\n    \"errors\": {\n        \"email\": \"An unexpected error occurred while saving the lead. Please try again later.\"\n    }\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        1568,
-        240
-      ],
-      "id": "81065323-bdda-433b-a44f-1006359d0a43",
-      "name": "send_postgres_error_response"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={\n  error_log: {\n    \"service\": \"faker_api\",\n    \"input\": {{ $('validate_input').item.json.data.toJsonString() }},\n    \"output\": {{ $json.toJsonString() }},\n    \"timestamp\": {{ $now.toUTC() }}\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        1184,
-        240
-      ],
-      "id": "5fb35e36-a020-4976-ab17-c920a66aa0f0",
-      "name": "format_postgres_error"
+      "name": "check_no_duplication"
     }
   ],
   "connections": {
@@ -723,7 +901,7 @@
       "main": [
         [
           {
-            "node": "check_input",
+            "node": "check_validation_success",
             "type": "main",
             "index": 0
           }
@@ -774,24 +952,6 @@
         ]
       ]
     },
-    "check_input": {
-      "main": [
-        [
-          {
-            "node": "check_lead_cpf",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "send_invalid_response",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "send_invalid_response": {
       "main": [
         []
@@ -826,7 +986,7 @@
       "main": [
         [
           {
-            "node": "check_duplication",
+            "node": "check_no_duplication",
             "type": "main",
             "index": 0
           }
@@ -838,24 +998,6 @@
         [
           {
             "node": "check_lead_email",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "check_duplication": {
-      "main": [
-        [
-          {
-            "node": "persist_lead",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "send_lead_duplicated_response",
             "type": "main",
             "index": 0
           }
@@ -878,6 +1020,93 @@
         [
           {
             "node": "log_postgres_error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_from_via_cep": {
+      "main": [
+        [
+          {
+            "node": "format_via_cep_data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "get_from_brasilapi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_via_cep_data": {
+      "main": [
+        [
+          {
+            "node": "persist_lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_from_brasilapi": {
+      "main": [
+        [
+          {
+            "node": "format_brasilapi_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_brasilapi_data": {
+      "main": [
+        [
+          {
+            "node": "persist_lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_validation_success": {
+      "main": [
+        [
+          {
+            "node": "check_lead_cpf",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "send_invalid_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_no_duplication": {
+      "main": [
+        [
+          {
+            "node": "get_from_via_cep",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "send_lead_duplicated_response",
             "type": "main",
             "index": 0
           }
